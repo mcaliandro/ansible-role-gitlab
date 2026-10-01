@@ -1,0 +1,11 @@
+---
+
+gitlab_config_dir: /etc/gitlab
+gitlab_config_file: "{{ gitlab_ce_config_dir }}/gitlab.rb"
+
+gitlab_repo_baseurl: https://packages.gitlab.com/gitlab/gitlab-ce
+gitlab_repo_gpgkey: https://packages.gitlab.com/gpgkey/gpg.key
+
+gitlab_package: "gitlab-{{ gitlab_edition }}"
+gitlab_deb_package_suffix: "-{{ gitlab_edition }}.0"
+gitlab_rpm_package_suffix: "-{{ gitlab_edition }}.0.el{{ ansible_facts.distribution_major_version }}"

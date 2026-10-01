@@ -1,0 +1,33 @@
+---
+
+# Select the GitLab edition to install.
+# 'ce' -> Community Edition (default)
+# 'ee' -> Enterprise Edition
+gitlab_edition: ce
+
+# Specify the version of GitLab to install.
+# If empty (default), the role installs the laest version available.
+gitlab_version: ""
+
+# Use the dictionary `gitlab_installation_vars` to define the environment
+# variables useful to configure GitLab at installation time.
+# ref: https://docs.gitlab.com/install/package/ubuntu/#advanced-configuration
+#
+# Setting `EXTERNAL_URL` is optional but recommended.
+#
+# Example:
+#   gitlab_installation_vars:
+#     EXTERNAL_URL: "http://gitlab.example.com"
+#     GITLAB_ROOT_EMAIL: "admin@example.com"
+#     GITLAB_ROOT_PASSWORD: "strong-password"
+#
+gitlab_installation_vars: {}
+
+# Replace gitlab.rb file on the target host with a custom configuration file
+# using `copy` module to upload the custom file. By default, the role does not
+# touch the remote file.
+#
+# Example:
+#   gitlab_config_file_src: gitlab.custom.rb
+#
+gitlab_config_file_src: ""

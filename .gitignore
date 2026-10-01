@@ -1,0 +1,3 @@
+# Ignore the content of 'files/' directory but '.gitkeep'
+files/*
+!files/.gitkeep

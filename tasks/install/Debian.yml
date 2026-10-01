@@ -1,0 +1,41 @@
+---
+
+- name: "Add GitLab {{ gitlab_edition | upper }} apt repository"
+  ansible.builtin.deb822_repository:
+    name: "gitlab_gitlab-{{ gitlab_edition }}"
+    types: deb
+    uris: "{{ gitlab_repo_baseurl }}/{{ ansible_facts.distribution | lower }}/"
+    suites: "{{ ansible_facts.distribution_release | lower }}"
+    components: main
+    signed_by: "{{ gitlab_repo_gpgkey }}"
+    state: present
+
+- name: Remove pin from deb package
+  ansible.builtin.file:
+    path: "/etc/apt/preferences.d/gitlab-{{ gitlab_edition }}"
+    state: absent
+
+- name: "Install version {{ gitlab_version }}"
+  ansible.builtin.apt:
+    name: "{{ gitlab_package }}={{ gitlab_version }}{{ gitlab_deb_package_suffix }}"
+    state: present
+    allow_downgrade: true
+    update_cache: true
+  environment: "{{ install_env | default({}) }}"
+  when:
+    - gitlab_version is defined
+    - gitlab_version | length > 0
+
+- name: Install the latest version available
+  ansible.builtin.apt:
+    name: "{{ gitlab_package }}"
+    state: latest
+    allow_downgrade: true
+    update_cache: true
+  environment: "{{ install_env | default({}) }}"
+  when: gitlab_version is not defined
+
+- name: Apply pin to deb package
+  ansible.builtin.template:
+    src: apt-preferences.j2
+    dest: "/etc/apt/preferences.d/gitlab-{{ gitlab_edition }}"

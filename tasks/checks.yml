@@ -1,0 +1,55 @@
+---
+
+- name: Check if application server is running
+  ansible.builtin.uri:
+    url: http://localhost/-/health
+    return_content: true
+  register: get_health
+  delay: 5
+  retries: 12
+  until: get_health.content == "GitLab OK"
+  failed_when: false
+
+- ansible.builtin.debug: var=get_health.content
+
+- name: Check if GitLab is ready to accept traffic
+  ansible.builtin.uri:
+    url: http://localhost/-/readiness?all=1
+    return_content: true
+  register: get_readiness
+  delay: 5
+  retries: 12
+  until: get_readiness.status == 200
+  failed_when: false
+
+- ansible.builtin.debug: var=get_readiness.content.json
+
+- name: Check if GitLab is not deadlocked
+  ansible.builtin.uri:
+    url: http://localhost/-/liveness
+    return_content: true
+  register: get_liveness
+  delay: 5
+  retries: 12
+  until: get_liveness.status == 200
+  failed_when: false
+
+- ansible.builtin.debug: var=get_liveness.content.json
+
+- name: Check status of GitLab services
+  ansible.builtin.shell: gitlab-ctl status
+  register: services_status_cmd
+
+- ansible.builtin.debug: var=services_status_cmd.stdout_lines
+
+- name: Check GitLab configuration
+  ansible.builtin.shell: gitlab-rake gitlab:check
+  register: config_check_cmd
+
+- ansible.builtin.debug: var=config_check_cmd.stdout_lines
+
+- name: Check pending configurations
+  ansible.builtin.shell: gitlab-ctl show-config
+  register: show_config_cmd
+
+- ansible.builtin.debug: var=show_config_cmd.stdout_lines

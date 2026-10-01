@@ -1,0 +1,41 @@
+---
+
+- name: "Add GitLab {{ gitlab_edition | upper }} yum repository"
+  ansible.builtin.yum_repository:
+    name: "gitlab_gitlab-{{ gitlab_edition }}"
+    baseurl: "{{ gitlab_repo_baseurl }}/el/$releasever/$basearch"
+    enabled: true
+    gpgkey: "{{ gitlab_repo_gpgkey }}"
+    gpgcheck: true
+    sslverify: true
+    sslcacert: /etc/pki/tls/certs/ca-bundle.crt
+    metadata_expire: "300"
+    state: present
+
+- name: Remove lock from rpm package
+  community.general.dnf_versionlock:
+    name: "{{ gitlab_package }}"
+    state: absent
+
+- name: "Install version {{ gitlab_version }}"
+  ansible.builtin.dnf:
+    name: "{{ gitlab_package }}-{{ gitlab_version }}{{ gitlab_rpm_package_suffix }}"
+    state: present
+    update_cache: true
+  environment: "{{ install_env | default({}) }}"
+  when:
+    - gitlab_version is defined
+    - gitlab_version | length > 0
+
+- name: Install the latest release available
+  ansible.builtin.dnf:
+    name: "{{ gitlab_package }}"
+    state: latest
+    update_cache: true
+  environment: "{{ install_env | default({}) }}"
+  when: gitlab_version is not defined
+
+- name: Apply lock to rpm package
+  community.general.dnf_versionlock:
+    name: "{{ gitlab_package }}"
+    state: present
