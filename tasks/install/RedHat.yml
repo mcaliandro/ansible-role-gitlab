@@ -17,16 +17,6 @@
     name: "{{ gitlab_package }}"
     state: absent
 
-- name: "Install version {{ gitlab_version }}"
-  ansible.builtin.dnf:
-    name: "{{ gitlab_package }}-{{ gitlab_version }}{{ gitlab_rpm_package_suffix }}"
-    state: present
-    update_cache: true
-  environment: "{{ install_env | default({}) }}"
-  when:
-    - gitlab_version is defined
-    - gitlab_version | length > 0
-
 - name: Install the latest release available
   ansible.builtin.dnf:
     name: "{{ gitlab_package }}"
@@ -35,7 +25,19 @@
   environment: "{{ install_env | default({}) }}"
   when: gitlab_version is not defined
 
-- name: Apply lock to rpm package
-  community.general.dnf_versionlock:
-    name: "{{ gitlab_package }}"
-    state: present
+- name: Install the required version
+  block:
+    - name: "Install version {{ gitlab_version }}"
+      ansible.builtin.dnf:
+        name: "{{ gitlab_package }}-{{ gitlab_version }}{{ gitlab_rpm_package_suffix }}"
+        state: present
+        update_cache: true
+      environment: "{{ install_env | default({}) }}"
+
+    - name: Apply lock to rpm package
+      community.general.dnf_versionlock:
+        name: "{{ gitlab_package }}"
+        state: present
+  when:
+    - gitlab_version is defined
+    - gitlab_version | length > 0

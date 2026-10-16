@@ -19,23 +19,11 @@
       tags: install
   tags: install
 
-- name: Check if initial_root_password file exists
-  ansible.builtin.stat:
-    path: /etc/gitlab/initial_root_password
-  register: password_file
-  tags: post_install
-
-- name: Fetch initial_root_password file
-  ansible.builtin.fetch:
-    src: /etc/gitlab/initial_root_password
-    dest: "{{ inventory_dir }}/host_vars"
-  when: password_file.stat.exists
-  tags: post_install
-
 - name: Replace gitlab.rb with a static configuration file
   ansible.builtin.copy:
     src: "{{ gitlab_config_file_src }}"
     dest: "{{ gitlab_config_file }}"
+  no_log: true
   notify: Reload GitLab configuration
   when:
     - gitlab_config_file_src is defined
@@ -45,6 +33,21 @@
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
   tags: [always, config]
+
+- name: Check if initial_root_password file exists
+  ansible.builtin.stat:
+    path: /etc/gitlab/initial_root_password
+  register: password_file
+  tags: config
+
+- name: Fetch initial_root_password file
+  ansible.builtin.fetch:
+    src: /etc/gitlab/initial_root_password
+    dest: "{{ inventory_dir }}/{{ inventory_hostname }}_initial_root_password"
+  when:
+    - gitlab_fetch_initial_root_password
+    - password_file.stat.exists
+  tags: config
 
 - name: Running checks on GitLab server
   ansible.builtin.include_tasks:

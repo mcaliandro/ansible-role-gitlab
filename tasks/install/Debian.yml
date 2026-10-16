@@ -15,17 +15,6 @@
     path: "/etc/apt/preferences.d/gitlab-{{ gitlab_edition }}"
     state: absent
 
-- name: "Install version {{ gitlab_version }}"
-  ansible.builtin.apt:
-    name: "{{ gitlab_package }}={{ gitlab_version }}{{ gitlab_deb_package_suffix }}"
-    state: present
-    allow_downgrade: true
-    update_cache: true
-  environment: "{{ install_env | default({}) }}"
-  when:
-    - gitlab_version is defined
-    - gitlab_version | length > 0
-
 - name: Install the latest version available
   ansible.builtin.apt:
     name: "{{ gitlab_package }}"
@@ -33,9 +22,22 @@
     allow_downgrade: true
     update_cache: true
   environment: "{{ install_env | default({}) }}"
-  when: gitlab_version is not defined
+  when: (gitlab_version is not defined) or (gitlab_version | length == 0)
 
-- name: Apply pin to deb package
-  ansible.builtin.template:
-    src: apt-preferences.j2
-    dest: "/etc/apt/preferences.d/gitlab-{{ gitlab_edition }}"
+- name: Install the required version
+  block:
+    - name: "Install version {{ gitlab_version }}"
+      ansible.builtin.apt:
+        name: "{{ gitlab_package }}={{ gitlab_version }}{{ gitlab_deb_package_suffix }}"
+        state: present
+        allow_downgrade: true
+        update_cache: true
+      environment: "{{ install_env | default({}) }}"
+
+    - name: Apply pin to deb package
+      ansible.builtin.template:
+        src: apt-preferences.j2
+        dest: "/etc/apt/preferences.d/gitlab-{{ gitlab_edition }}"
+  when:
+    - gitlab_version is defined
+    - gitlab_version | length > 0

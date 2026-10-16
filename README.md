@@ -68,6 +68,13 @@ References:
 - https://docs.gitlab.com/install/package/debian/#advanced-configuration
 - https://docs.gitlab.com/install/package/ubuntu/#advanced-configuration
 
+### Download `initial_root_password` file
+Use the variable `gitlab_fetch_initial_root_password` to download the file using the fetch module.
+By default, the destination path is `inventory_dir`.
+```yaml
+gitlab_fetch_initial_root_password: true
+```
+
 ### Configure GitLab using a static `gitlab.rb` file
 Use the variable `gitlab_config_file_src` to replace the `gitlab.rb` file on the instance with a custom configuration file using the Ansible module `copy`. 
 This option allows you to upload your custom configuration file that you choose to store inside `files` directory of this role, or in a sub-directory of `inventory_dir` path.
@@ -98,7 +105,6 @@ Example Playbook
 Install and configure GitLab CE using this playbook.
 The role uses the following tags in order to run specific tasks: 
 - `install`: to install the GitLab CE package;
-- `post_install`: to run post-installation tasks like fetching the 'initial_root_password' file;
 - `config`: to update the configuration file (`gitlab.rb`) and reconfigure the instance;
 - `checks`: to perform checks on a running instance.
 
