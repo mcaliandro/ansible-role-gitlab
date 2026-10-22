@@ -1,8 +1,8 @@
 ---
 galaxy_info:
   author: mcaliandro
-  description: Install and configure GitLab CE (Omnibus)
-  role_name: gitlab_ce
+  description: Install and configure GitLab (Omnibus)
+  role_name: gitlab
 
   license: Apache-2.0
 
@@ -21,7 +21,6 @@ galaxy_info:
 
   galaxy_tags:
     - gitlab
-    - gitlab-ce
     - devops
     - ci/cd
     - pipelines

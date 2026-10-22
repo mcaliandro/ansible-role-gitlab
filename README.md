@@ -102,9 +102,8 @@ None.
 Example Playbook
 ----------------
 
-Install and configure GitLab CE using this playbook.
-The role uses the following tags in order to run specific tasks: 
-- `install`: to install the GitLab CE package;
+The role uses the following tags in order to run specific tasks:
+- `install`: to install the GitLab package;
 - `config`: to update the configuration file (`gitlab.rb`) and reconfigure the instance;
 - `checks`: to perform checks on a running instance.
 
