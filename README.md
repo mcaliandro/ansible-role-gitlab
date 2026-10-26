@@ -80,7 +80,7 @@ Use the variable `gitlab_fetch_initial_root_password_dest` to specify a destinat
 gitlab_fetch_initial_root_password_dest: /tmp
 ```
 
-By default, `fetch` module is setup with parameter `flat=false`, so it will append 'hostname/path/to/file' the destination path.
+By default, `fetch` module is setup with parameter `flat=false`, so it will append 'hostname/path/to/file' the destination path (see `fetch` module's parameter [flat](https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/fetch_module.html#parameter-flat)).
 
 
 ### Configure GitLab using a static `gitlab.rb` file
