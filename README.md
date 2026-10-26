@@ -69,25 +69,33 @@ References:
 - https://docs.gitlab.com/install/package/ubuntu/#advanced-configuration
 
 ### Download `initial_root_password` file
-Use the variable `gitlab_fetch_initial_root_password` to download the file using the fetch module.
-By default, the destination path is `inventory_dir`.
+Setup the variable `gitlab_fetch_initial_root_password=true` to download the file using the `fetch` module.
+By default, the role does not download the file.
 ```yaml
-gitlab_fetch_initial_root_password: true
+gitlab_fetch_initial_root_password: false
 ```
 
+Use the variable `gitlab_fetch_initial_root_password_dest` to specify a destination path where to save the 'initial_root_password' file.
+```yaml
+gitlab_fetch_initial_root_password_dest: /tmp
+```
+
+By default, `fetch` module is setup with parameter `flat=false`, so it will append 'hostname/path/to/file' the destination path.
+
+
 ### Configure GitLab using a static `gitlab.rb` file
-Use the variable `gitlab_config_file_src` to replace the `gitlab.rb` file on the instance with a custom configuration file using the Ansible module `copy`. 
-This option allows you to upload your custom configuration file that you choose to store inside `files` directory of this role, or in a sub-directory of `inventory_dir` path.
+Use the variable `gitlab_config_file` to replace the `gitlab.rb` file on the instance with a custom configuration file using the Ansible module `copy`. 
+This option allows you to upload your custom configuration file that you choose to store inside `files` directory of this role, or in a sub-directory of your Ansible project's `inventory_dir` path.
 
 An example:
 ```yaml
-gitlab_config_file_src: gitlab.custom.rb
+gitlab_custom_config_file: gitlab.custom.rb
 ```
 
 By default, the variable is set to empty, meaning the role keeps the file `gitlab.rb` on the instance untouched.
 
 ```yaml
-gitlab_config_file_src: ""
+gitlab_custom_config_file: ""
 ```
 
 Consult the official documentation for more info about [configuring a Linux package installation](https://docs.gitlab.com/omnibus/settings/) using `gitlab.rb` file.

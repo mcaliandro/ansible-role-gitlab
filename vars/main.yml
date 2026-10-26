@@ -1,7 +1,6 @@
 ---
 
 gitlab_config_dir: /etc/gitlab
-gitlab_config_file: "{{ gitlab_config_dir }}/gitlab.rb"
 
 gitlab_repo_baseurl: "https://packages.gitlab.com/gitlab/gitlab-{{ gitlab_edition }}"
 gitlab_repo_gpgkey: https://packages.gitlab.com/gpgkey/gpg.key

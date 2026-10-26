@@ -25,13 +25,16 @@ gitlab_installation_vars: {}
 
 # Whether to use or not the fetch module to download 'initial_root_password'
 # file locally from the remote host.
-gitlab_fetch_initial_root_password: true
+gitlab_fetch_initial_root_password: false
+
+# Specify a destionation path where to download 'initial_root_password' file.
+# NOTE: fetch module is configured with parameter `flat=false` by default.
+gitlab_fetch_initial_root_password_dest: /tmp
 
 # Replace gitlab.rb file on the target host with a custom configuration file
-# using `copy` module to upload the custom file. By default, the role does not
-# touch the remote file.
+# using `copy` module. By default, the role does not touch the remote file.
 #
 # Example:
-#   gitlab_config_file_src: gitlab.custom.rb
+#   gitlab_custom_config_file: gitlab.custom.rb
 #
-gitlab_config_file_src: ""
+gitlab_custom_config_file: ""
