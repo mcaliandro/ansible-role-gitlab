@@ -45,7 +45,7 @@
   ansible.builtin.fetch:
     src: "{{ gitlab_config_dir }}/initial_root_password"
     dest: "{{ gitlab_fetch_initial_root_password_dest }}"
-    flat: false
+    flat: true
   when:
     - gitlab_fetch_initial_root_password
     - password_file.stat.exists

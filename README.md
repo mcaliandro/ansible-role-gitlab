@@ -69,19 +69,17 @@ References:
 - https://docs.gitlab.com/install/package/ubuntu/#advanced-configuration
 
 ### Download `initial_root_password` file
-Setup the variable `gitlab_fetch_initial_root_password=true` to download the file using the `fetch` module.
+Setup the variable `gitlab_fetch_initial_root_password=true` to download the file using the `fetch` module (with parameter `flat=true`).
 By default, the role does not download the file.
 ```yaml
 gitlab_fetch_initial_root_password: false
 ```
 
 Use the variable `gitlab_fetch_initial_root_password_dest` to specify a destination path where to save the 'initial_root_password' file.
+By default:
 ```yaml
-gitlab_fetch_initial_root_password_dest: /tmp
+gitlab_fetch_initial_root_password_dest: "/tmp/{{ inventory_hostname }}/initial_root_password"
 ```
-
-By default, `fetch` module is setup with parameter `flat=false`, so it will append 'hostname/path/to/file' the destination path (see `fetch` module's parameter [flat](https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/fetch_module.html#parameter-flat)).
-
 
 ### Configure GitLab using a static `gitlab.rb` file
 Use the variable `gitlab_config_file` to replace the `gitlab.rb` file on the instance with a custom configuration file using the Ansible module `copy`. 

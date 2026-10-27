@@ -28,8 +28,8 @@ gitlab_installation_vars: {}
 gitlab_fetch_initial_root_password: false
 
 # Specify a destionation path where to download 'initial_root_password' file.
-# NOTE: fetch module is configured with parameter `flat=false` by default.
-gitlab_fetch_initial_root_password_dest: /tmp
+# NOTE: fetch module is configured with parameter `flat=true` by default.
+gitlab_fetch_initial_root_password_dest: "/tmp/{{ inventory_hostname }}/initial_root_password"
 
 # Replace gitlab.rb file on the target host with a custom configuration file
 # using `copy` module. By default, the role does not touch the remote file.
